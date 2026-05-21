@@ -1,5 +1,5 @@
 # seasug-2026-paper
-Repository for SEASUG 2026 Paper (co-authored with Dr. J. Daniel Berleant)
+Repository for [SEASUG 2026 Paper](https://sesug.org/SEASUG2026/index.php "Southeast Atlantic SAS Users Group") (co-authored with Dr. J. Daniel Berleant)
 
 
 > [!NOTE]
