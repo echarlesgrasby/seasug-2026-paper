@@ -8,4 +8,4 @@ Since 2020, he has worked at Southwest Power Pool, most recently serving in the 
 
 ## Dr. Daniel Berleant Bio
 
-TBD
+Daniel Berleant (PhD '91, UT Austin) is currently a faculty member at the University of Arkansas at Little Rock, where he has been since 2006. He has advised 22 PhD students, over 60 master's students, and published well over 100 articles. He also wrote a book on the future which helps bring the excitement of science and engineering concepts to a lay audience.
