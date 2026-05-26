@@ -9,3 +9,6 @@ Working Title: **A Domain-Specific Computer Language for Market Monitoring: the 
 > There are some sections of this paper that are duplicated, either in part or in whole, from the first author's (Eric C. Grasby) dissertation.
 > This dissertation is still a draft (has not been published with ProQuest) at the time of writing this paper.
 
+## License
+
+Please cite with proper credit to the authors.
