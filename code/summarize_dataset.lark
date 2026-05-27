@@ -1,0 +1,44 @@
+//----------------------------------------------------------------------------------------------------------
+//FILENAME: 		 summarize_dataset.lark
+//AUTHOR:			 Eric C. Grasby, MSIQ
+//INIT DATE:		 2026-05-27
+//PURPOSE:			 contains a grammar for allowing a user to generate a basic
+//					 "about this dataset" summary
+//TRANSPILER TARGET: BASE SAS (PROC SQL; PROC CONTENTS;)
+//-----------------------------------------------------------------------------------------------------------
+
+
+start: dataset summary
+
+location: LIBNAME
+dataset: "DATASET" LIBNAME NAME ";"
+summary: "SUMMARY" "{" summary_operation+ "}"
+
+summary_operation:  count_op
+				| mean_op
+				| min_op
+				| max_op
+				| contents_op			//if contents_op used, semantic layer should utilize PROC CONTENTS
+
+count_op:   "COUNT" ";"
+mean_op:	"MEAN" NAME ";"
+min_op:		"MIN" NAME ";"
+max_op:		"MAX" NAME ";"
+contents_op: "PEEK" ";"
+
+NAME: /[a-zA-Z_][a-zA-Z0-9_]*/
+LIBNAME: /[a-zA-Z_][a-zA-Z0-9_]*/
+
+%import common.WS
+%ignore WS
+
+
+
+// DATASET WORK TRADES;
+//
+// SUMMARY {
+//		COUNT;
+//		MEAN price;
+//		MIN price;
+//		MAX price;
+// }
