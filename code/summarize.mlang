@@ -1,9 +1,0 @@
-DATASET SASHELP CARS;
-
-SUMMARY {
-	COUNT;
-	MEAN msrp;
-	MIN  msrp;
-	MAX  msrp;
-	PEEK;
-}
