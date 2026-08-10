@@ -1,0 +1,56 @@
+//================================================================================
+//File        : grammar.lark
+//Author      : Eric C. Grasby, MSIQ
+//Created     : 2026-07-31
+//Dissertation: A Domain-Specific Language Approach to Monitoring and Surveillance in Wholesale Electricity Markets
+//Institution : University of Arkansas at Little Rock
+//Advisor     : Dr. Daniel Berleant
+//--------------------------------------------------------------------------------
+//Purpose     :
+//    This serves as the core grammar for the Mlang DSL. This is processed by the Lark framework
+//    (See: https://github.com/lark-parser/lark) and is used to parse files with a `.mlang` extension
+//
+//Notes       :
+//    Supported features include: CSV loading, data set tagging, field name tagging, tag searching
+//
+//Dependencies:
+//    Requires the mlang transpiler to create SAS code
+//
+//Version     : 0.1.0
+//Last Updated: 2026-07-31
+//================================================================================
+
+start: statement+
+
+statement: create_dataset_stmt
+         | tag_stmt
+         | search_stmt
+
+// CREATE DATASET NAME FROM CSV("/path/to/file.csv");
+create_dataset_stmt: "CREATE"i "DATASET"i IDENTIFIER "FROM"i source ";"
+source: "CSV"i "(" STRING ")"
+
+// TAG target WITH key = "value";
+// TAG target WITH (key1 = "value1", key2 = "value2", );
+tag_stmt: "TAG"i target "WITH"i tag_body ";"
+target: IDENTIFIER ("." IDENTIFIER)?
+tag_body: tag_pair
+        | "(" tag_pair ("," tag_pair)* ","? ")"
+tag_pair: IDENTIFIER "=" STRING
+
+// SEARCH BY TAG(name) THEN ORDER BY ASC;
+search_stmt: "SEARCH"i "BY"i "TAG"i "(" IDENTIFIER ")" order_clause? ";"
+order_clause: "THEN"i "ORDER"i "BY"i direction
+direction: "ASC"i -> asc
+         | "DESC"i -> desc
+
+IDENTIFIER: /[A-Za-z_][A-Za-z0-9_]*/
+STRING: /"(?:[^"\\]|\\.)*"/
+LANG_COMMENT: /\/\*[\s\S]*?\*\//
+
+%import common.WS
+%ignore WS
+%import common.CPP_COMMENT
+
+%ignore CPP_COMMENT
+%ignore LANG_COMMENT
