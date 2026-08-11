@@ -64,7 +64,12 @@ class CodeGenerator(ABC):
             if isinstance(stmt, CreateDatasetStmt):
                 chunks.append(self.emit_create_dataset(stmt, symbols))
             elif isinstance(stmt, TagStmt):
-                chunks.append(self.emit_tag(stmt, symbols))
+                try:
+                    chunks.append(self.emit_tag(stmt, symbols))
+                except Exception as ex:
+                    raise CodeGenError(f"Cannot find template file for tag generation: {ex}",
+                                        getattr(stmt, "line", None),
+                    )
             elif isinstance(stmt, SearchStmt):
                 chunks.append(self.emit_search(stmt, symbols))
             else:

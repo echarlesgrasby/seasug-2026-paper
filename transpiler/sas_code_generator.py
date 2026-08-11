@@ -1,8 +1,24 @@
-"""
-SAS code generation
+#================================================================================
+#File        : sas_code_generator.py
+#Author      : Eric C. Grasby, MSIQ
+#Created     : 2026-07-31
+#Dissertation: A Domain-Specific Language Approach to Monitoring and Surveillance in Wholesale Electricity Markets
+#Institution : University of Arkansas at Little Rock
+#Advisor     : Dr. Daniel Berleant
+#--------------------------------------------------------------------------------
+#Purpose     :
+#    An output code generator. The class receives the constructed SymbolTable and translates
+#    those statements into valid SAS output code.
+#
+#Notes       :
+#    This is a fairly basic program at the moment, but illustrates how the transpiler strategy can create SAS source code
+#    from an mlang input program
+#
+#
+#Version     : 0.1.0
+#Last Updated: 2026-07-31
+#================================================================================
 
-Eric C. Grasby
-"""
 
 from __future__ import annotations
 
@@ -10,7 +26,7 @@ from typing import List
 from code_gen import CodeGenerator
 from files.ast_nodes import CreateDatasetStmt, TagStmt, SearchStmt
 from files.symbol_table import SymbolTable
-
+from peek_data_file import load_sas_template_file
 
 class SASCodeGenerator(CodeGenerator):
     """
@@ -97,16 +113,45 @@ run;
         ]
 
     def emit_create_dataset(self, stmt: CreateDatasetStmt, symbols: SymbolTable) -> str:
+        """
+        Emit method for importing a data set into SAS
+        """
         return f"""
 /* Create Dataset: {stmt.name} (invokes import_dataset__basic.sas) */
 %import_dataset__basic(source={stmt.source.path},out_name={stmt.name},source_format={stmt.source.type});
         """
 
     def emit_tag(self, stmt: TagStmt, symbols: SymbolTable) -> str:
-        pass
+        """
+        Emit method for tagging a data set or individual field in SAS
+        """
+        if stmt.target.field_name is not None:
+            tpl_file_name = "tag_field"
+        else:
+            tpl_file_name = "tag_data_set"
+        tpl = load_sas_template_file(tpl_file_name)
+
+        statement = (tpl
+                     .replace("{{TARGET_LIBRARY}}", "WORK")
+                     .replace("{{TARGET_DATASET}}",stmt.target.dataset_name)
+                     .replace("{{FIELD_NAME}}", "" if stmt.target.field_name is None else stmt.target.field_name)
+                     )
+
+        tags_to_use = []
+        for tag_pair in stmt.pairs:
+            tags_to_use.append(f"{tag_pair.key}='{tag_pair.value}'")
+        tags = "\n".join(tags_to_use)
+        statement = statement.replace("{{TAG_PAIR}}",tags)
+        return statement
 
     def emit_search(self, stmt: SearchStmt, symbols: SymbolTable) -> str:
+        """
+        Emit method for searching for a tagged data set or field in SAS
+        """
         pass
 
     def postamble(self, symbols: SymbolTable) -> List[str]:
+        """
+        Emit method for writing postamble code to a SAS program
+        """
         return []

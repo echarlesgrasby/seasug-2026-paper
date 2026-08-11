@@ -67,10 +67,9 @@ def compile_source(source_text: str, generator=None, validators=None) -> tuple:
     validators.run_validators); pass `validators=[]` to skip custom
     validation entirely and only run the core language checks.
     """
-    validators = []
     program = parse_to_ast(source_text)
     symbols = build_symbol_table(program)
-    run_validators(symbols, validators)
+    run_validators(symbols)
 
     if symbols.errors:
         messages = "\n".join(f"  - {e}" for e in symbols.errors)
@@ -82,7 +81,7 @@ def compile_source(source_text: str, generator=None, validators=None) -> tuple:
 
 
 def main() -> None:
-    setup_logging()
+    setup_logging(level=logging.DEBUG)
     logger = logging.getLogger(__name__)
 
     current_run = RunManager.Run(datetime_string="2026_08_10_15_53_00")
@@ -98,6 +97,8 @@ def main() -> None:
 
     code_generator = sas_code_generator.SASCodeGenerator()
     program, symbols, output_code = compile_source(source_text, generator=code_generator)
+
+    current_run.copy_input_dsl_file("sample.mlang")
 
     #if debug: # print out the AST
     #print("=" * 70)
@@ -120,23 +121,28 @@ def main() -> None:
 
     # Notify the user if there are any warnings that were detected during transpilation
     if symbols.warnings:
-        print()
-        print("Warnings:")
+        current_run.write_text_file("warnings.log", symbols.warnings)
+        logger.info("")
+        logger.info("Warnings:")
         for w in symbols.warnings:
-            print(f"  - {w}")
+            logger.info(f"  - {w}")
 
-    if len(symbols.errors) == 0:
-        print("=" * 70)
-        print("Output Code")
-        print("=" * 70)
-        print(output_code)
+
+    if len(symbols.errors) != 0:
+        logger.debug("=" * 70)
+        logger.debug("Output Code")
+        logger.debug("=" * 70)
+        logger.debug(output_code)
+        current_run.write_sas_file("sample.sas", output_code)
+        # current_run.write_text_file("sample.sas", output_code)
     else:
         logger.error(f"{len(symbols.errors)} error(s) found during transpiler process. Please investigate these errors "
-                     f"and adjust your mlang program. \nErrors can be found in: {current_run.current_run_path}")
+                     f"and adjust your mlang program.")
+        current_run.write_error_file("errors.log", symbols.errors)
 
-    print("=" * 70)
+    logger.info("=" * 70)
     logger.info("Exiting transpiler.")
-    print("=" * 70)
+    logger.info("=" * 70)
 
 if __name__ == "__main__":
     main()
