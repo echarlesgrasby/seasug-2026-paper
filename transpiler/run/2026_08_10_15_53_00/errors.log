@@ -1,0 +1,12 @@
+[undefined-dataset] Reference to undefined dataset 'EIA_SOURCE_UTILITIES'
+[undefined-dataset] Reference to undefined dataset 'EIA_SOURCE_UTILITIES'
+[sas-dataset-name-length] Dataset name 'EIA_SOURCE_UTILITIES_WITH_LONG_NAME' is 35 characters long; SAS names must be 32 characters or fewer
+[source] Field names 'FERC_EXEMPT_WHOLESALE_GENERATOR_STATUS' and 'FERC_EXEMPT_WHOLESALE_GENERATOR_DOCKET_NUMBER' in data set 'EIA_SOURCE_PLANTS' collide once truncated to 32 characters
+[source] Field names 'TRANSMISSION_OR_DISTRIBUTION_SYSTEM_OWNER' and 'TRANSMISSION_OR_DISTRIBUTION_SYSTEM_OWNER_ID' in data set 'EIA_SOURCE_PLANTS' collide once truncated to 32 characters
+[source] Field names 'TRANSMISSION_OR_DISTRIBUTION_SYSTEM_OWNER' and 'TRANSMISSION_OR_DISTRIBUTION_SYSTEM_OWNER_STATE' in data set 'EIA_SOURCE_PLANTS' collide once truncated to 32 characters
+[source-data-field-name-length] Field name 'FERC_SMALL_POWER_PRODUCER_DOCKET_NUMBER' is 39 characters long; SAS names must be 32 characters or fewer
+[source-data-field-name-length] Field name 'FERC_EXEMPT_WHOLESALE_GENERATOR_STATUS' is 38 characters long; SAS names must be 32 characters or fewer
+[source-data-field-name-length] Field name 'FERC_EXEMPT_WHOLESALE_GENERATOR_DOCKET_NUMBER' is 45 characters long; SAS names must be 32 characters or fewer
+[source-data-field-name-length] Field name 'TRANSMISSION_OR_DISTRIBUTION_SYSTEM_OWNER' is 41 characters long; SAS names must be 32 characters or fewer
+[source-data-field-name-length] Field name 'TRANSMISSION_OR_DISTRIBUTION_SYSTEM_OWNER_ID' is 44 characters long; SAS names must be 32 characters or fewer
+[source-data-field-name-length] Field name 'TRANSMISSION_OR_DISTRIBUTION_SYSTEM_OWNER_STATE' is 47 characters long; SAS names must be 32 characters or fewer
