@@ -1,8 +1,8 @@
 # seasug-2026-paper
-Repository for [SEASUG 2026 Paper](https://sesug.org/SEASUG2026/index.php "Southeast Atlantic SAS Users Group") (co-authored with Dr. J. Daniel Berleant)
+Repository for [SEASUG 2026 Paper](https://sesug.org/SEASUG2026/index.php "Southeast Atlantic SAS Users Group") (co-authored with Dr. Daniel Berleant and Dr. Maria Gingras)
 
 
-Working Title: **A Domain-Specific Computer Language for Market Monitoring: the Missing Link Between Thoughts and SAS(R)**
+Working Title: **A Domain-Specific Computer Language for Market Monitoring: From Domain Logic to SAS Code**
 
 
 > [!NOTE]
