@@ -54,11 +54,11 @@ class CodeGenerator(ABC):
     should not require a direct override
     """
 
-    def generate(self, program: Program, symbols: SymbolTable) -> str:
+    def generate(self, program: Program, symbols: SymbolTable, **kwargs) -> str:
         """Drives codegen over the whole program, in source order, and
         returns the final generated output as a single string."""
         chunks: List[str] = []
-        chunks.extend(self.preamble(symbols))
+        chunks.extend(self.preamble(symbols, current_run=kwargs.get("current_run")))
 
         for stmt in program.statements:
             if isinstance(stmt, CreateDatasetStmt):
@@ -84,7 +84,7 @@ class CodeGenerator(ABC):
     # -- Hooks for boilerplate that isn't tied to a specific statement -----
 
     @abstractmethod
-    def preamble(self, symbols: SymbolTable) -> List[str]:
+    def preamble(self, symbols: SymbolTable, **kwargs) -> List[str]:
         """Optional: code to emit once, before any statement output (e.g.
         SAS `OPTIONS`/`LIBNAME` setup). Default: nothing."""
         raise NotImplementedError

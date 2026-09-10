@@ -16,7 +16,7 @@
 #
 #
 #Version     : 0.1.0
-#Last Updated: 2026-07-31
+#Last Updated: 2026-08-20
 #================================================================================
 
 
@@ -33,18 +33,23 @@ class SASCodeGenerator(CodeGenerator):
     Implements basic SAS code generation from the mlang source code
     """
 
-    def preamble(self, symbols: SymbolTable) -> List[str]:
+    def preamble(self, symbols: SymbolTable, **kwargs) -> List[str]:
+        current_run=kwargs.get("current_run")
+
         return [
 
-            """
+            f"""
 /* Setup some global folder variables that we can reference throughout the SAS session */ 
-%GLOBAL MAIN_FOLDER MACROS_FOLDER FCMP_FOLDER;
+%GLOBAL MAIN_FOLDER MACROS_FOLDER FCMP_FOLDER RUN_FOLDER OUTPUT_FOLDER;
 
 %LET MAIN_FOLDER=%SYSFUNC(PATHNAME(HOME))/sasuser.v94;
+%LET RUN_FOLDER=&MAIN_FOLDER./RUN;
+%LET OUTPUT_FOLDER={current_run.datetime_string};
 %LET MACROS_FOLDER=&MAIN_FOLDER./MACROS;
 %LET FCMP_FOLDER=&MAIN_FOLDER./FCMP;
 
-%PUT MAIN_FOLDER is: &MAIN_FOLDER.;
+%PUT NOTE: MAIN FOLDER is: &MAIN_FOLDER.;
+%PUT NOTE: RUN OUTPUT directory is &OUTPUT_FOLDER.;
 
 /* Create a MACROS folder if user wishes to include custom macros */
 data _null_;
@@ -56,6 +61,13 @@ run;
 data _null_;
     folder = dcreate("FCMP","&MAIN_FOLDER.");
     put "FCMP_FOLDER is &FCMP_FOLDER.";
+run;
+
+/* Create an RUN OUTPUT folder for where any data sets should be exported */
+data _null_;
+    folder = dcreate("RUN","&RUN_FOLDER.");
+    folder = dcreate("&OUTPUT_FOLDER.", "&RUN_FOLDER.");
+    put "NOTE: &OUTPUT_FOLDER." created within RUN folder. Any data set exports shall be created here.";
 run;
 
 /* Include all macros in the MACROS folder */
@@ -148,7 +160,14 @@ run;
         """
         Emit method for searching for a tagged data set or field in SAS
         """
-        pass
+        tpl = load_sas_template_file("search_tag")
+
+        statement = (tpl
+                     .replace("{{TAG_NAME}}",stmt.tag_name.upper())
+                     .replace("{{ORDER_DIR}}", stmt.order.direction.upper()))
+
+        return statement
+
 
     def postamble(self, symbols: SymbolTable) -> List[str]:
         """

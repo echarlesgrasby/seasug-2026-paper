@@ -1,16 +1,30 @@
-"""
-Parse-tree -> AST transformation.
-
-This is the only module that should import both `lark` and `ast_nodes`.
-Everything downstream of this module works purely in terms of ast_nodes,
-so the rest of the pipeline stays decoupled from grammar/parser details.
-"""
+#================================================================================
+#File        : transformer.py
+#Author      : Eric C. Grasby, MSIQ
+#Created     : 2026-07-31
+#Dissertation: A Domain-Specific Language Approach to Monitoring and Surveillance in Wholesale Electricity Markets
+#Institution : University of Arkansas at Little Rock
+#Advisor     : Dr. Daniel Berleant
+#--------------------------------------------------------------------------------
+#Purpose     :
+#    Transforms DSL code from plain text in Lark grammar to abstract (AST) nodes that the transpiler can convert
+#    to output SAS code
+#
+#Notes       :
+#    This is the only module that should import both `lark` and `ast_nodes`.
+#    All code downstream of this module should have an API to handle ast_nodes w/out knowledge of the Lark grammar
+#
+#
+#Version     : 0.1.0
+#Last Updated: 2026-08-20
+#================================================================================
 
 from __future__ import annotations
 
 from lark import Lark, Transformer, v_args, LarkError, UnexpectedCharacters
 from lark.tree import Meta
 import logging
+import ast_printer as asp
 
 from ast_nodes import (
     Program,
@@ -38,8 +52,11 @@ class DslTransformer(Transformer):
     """Walks the Lark parse tree bottom-up, building ast_nodes.* objects.
 
     `v_args(meta=True)` gives every rule method a `meta` (line/column info)
-    as the first argument, ahead of the transformed children -- that's how
-    we attach source positions to AST nodes for later diagnostics.
+    as the first argument, ahead of the transformed children
+    Enables attaching source positions to AST nodes.
+
+    TODO: Eric G: This is currently a fairly flat grammar, so having everything in one Transformer object works okay
+          If the language gets bigger, probably need to refactor this
     """
 
     def start(self, meta: Meta, children):
@@ -101,7 +118,12 @@ class DslTransformer(Transformer):
         return direction
 
     def search_stmt(self, meta: Meta, children):
-        tag_name_tok, order = children
+        try:
+            tag_name_tok, order = children
+        except ValueError as ve:
+            logging.debug(f"No order clause specified on line {meta.line} at column {meta.column}. Assume ASC - ({ve})")
+            tag_name_tok = children[0]
+            order = OrderClause(line=meta.line, column=meta.column)
         return SearchStmt(
             tag_name=str(tag_name_tok),
             order=order,
@@ -123,7 +145,9 @@ def parse_to_ast(source_text: str) -> Program:
     parser = build_parser()
     try:
         tree = parser.parse(source_text)
-        return DslTransformer().transform(tree)
+        abs_tree = DslTransformer().transform(tree)
+        logger.debug(asp.format_ast(abs_tree))
+        return abs_tree
     except UnexpectedCharacters as uec:
         logging.error(f"Unexpected character '{uec.char}' found in input at line {uec.line}, column {uec.column}.")
     except LarkError as lke:

@@ -8,7 +8,7 @@
 */
 
 /* Create new dataset: power plants (Source: EIA)*/
-CREATE DATASET EIA_SOURCE_PLANTS FROM CSV("../data/EIA_924_PLANTS.csv");
+CREATE DATASET EIA_SOURCE_PLANTS FROM CSV("../data/EIA_860_PLANTS.csv");
 
 /* Tag "EIA_SOURCE_PLANTS" with metadata */ 
 TAG EIA_SOURCE_PLANTS WITH SOURCE_ORG = "Energy Information Authority (EIA)";
@@ -18,12 +18,19 @@ TAG EIA_SOURCE_PLANTS.UTILITY_ID WITH (PRIMARY_KEY = "True" , UNIQUE = "True", )
 TAG EIA_SOURCE_PLANTS.PLANT_CODE WITH PRIMARY_KEY = "True";
 
 /* Create new dataset: generating utilities (Source: EIA)*/
-CREATE DATASET EIA_SOURCE_UTILITIES FROM CSV("../data/EIA_924_UTILITIES.csv");
+CREATE DATASET EIA_SOURCE_UTILITIES FROM CSV("../data/EIA_860_UTILITIES.csv");
 
 /* Tag "EIA_SOURCE_UTILITIES" with metadata */
 TAG EIA_SOURCE_UTILITIES WITH SOURCE_ORG = "Energy Information Authority (EIA)";
 
 tag EIA_SOURCE_UTILITIES.utility_id with (primary_key = "true", unique = "true"); /* .mlang is case insensitive! */
 
+/* Create new dataset: generators (Source: EIA) */
+CREATE DATASET EIA_SOURCE_GENS FROM CSV("../data/EIA_860_GENERATORS.csv");
+
 /* Search for datasets / fields that are tagged with the "PRIMARY_KEY" value */
 SEARCH BY TAG(PRIMARY_KEY) THEN ORDER BY ASC;
+
+/* line 29 would also have been valid to say: `SEARCH BY TAG(PRIMARY_KEY);`
+   .mlang would have implicitly ordered results ascending
+*/

@@ -1,18 +1,23 @@
-"""
-Symbol table + semantic analysis.
-
-This walks the AST *in program order* (order matters: this DSL is
-declarative but still sequential -- you can't TAG a dataset that hasn't
-been CREATEd yet) and builds up a symbol table describing every dataset,
-its fields (as far as they're known), and the tags attached to each.
-
-It also collects semantic errors/warnings that are impossible to catch at
-the grammar level (undefined dataset references, duplicate definitions,
-searching for a tag that was never assigned, etc.).
-
-Nothing here talks to Lark or emits SAS -- it operates purely over
-ast_nodes.* objects, and produces a SymbolTable that code_gen.py consumes.
-"""
+#================================================================================
+#File        : symbol_table.py
+#Author      : Eric C. Grasby, MSIQ
+#Created     : 2026-07-31
+#Dissertation: A Domain-Specific Language Approach to Monitoring and Surveillance in Wholesale Electricity Markets
+#Institution : University of Arkansas at Little Rock
+#Advisor     : Dr. Daniel Berleant
+#--------------------------------------------------------------------------------
+#Purpose     :
+#   Assembles a compiler-like symbol table that can be used in semantic analysis of underlying input data.
+#   The SymbolTable class makes the transpiler aware of dependencies that can't be known during program parsing
+#
+#Notes       :
+#   Note that the Lark grammar and SAS 'emitter' functions are not scoped here. The Symbol table operates purely on the
+#   abstract syntax tree from ast_nodes.py
+#
+#
+#Version     : 0.1.0
+#Last Updated: 2026-08-20
+#================================================================================
 
 from __future__ import annotations
 
@@ -36,7 +41,7 @@ class FieldSymbol:
     """A field of a dataset. Fields are discovered implicitly -- the first
     time a `TAG dataset.field WITH ...` statement mentions one, we record
     it here. (There's no explicit field/schema declaration in the DSL yet;
-    if you add one later, this is where it'd get populated instead.)"""
+    """
     name: str
     tags: Dict[str, str] = field(default_factory=dict)
     declared_at_line: Optional[int] = None
@@ -98,8 +103,8 @@ class SymbolTable:
 
     def add_error(self, message: str, line: Optional[int] = None, rule: Optional[str] = None):
         """Public API for reporting a hard error -- use this from custom
-        validators (see validators.py) rather than building SemanticError
-        yourself. `rule` is an optional short identifier (e.g. "sas-name-
+        validators (see validators.py).
+        `rule` is an optional short identifier (e.g. "sas-name-
         length") so errors can later be filtered/suppressed by rule name."""
         prefix = f"[{rule}] " if rule else ""
         self.errors.append(SemanticError(f"{prefix}{message}", line))

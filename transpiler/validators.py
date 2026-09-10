@@ -1,29 +1,28 @@
-"""
-Custom semantic validators.
-
-The core `symbol_table.py` build step only enforces rules the *language*
-itself needs (no duplicate datasets, no undefined references) -- it knows
-nothing about SAS. Everything target-specific (identifier length limits,
-illegal characters, reserved words, path constraints, whatever else comes
-up) belongs here instead, as small independent validator functions that
-run *after* the symbol table is fully built.
-
-Why a separate pass instead of stuffing checks into symbol_table.py:
-  - Keeps "what does this program mean" (symbol_table.py) separate from
-    "is this program legal for MY target" (here). If you ever generate
-    something other than SAS, symbol_table.py doesn't change at all.
-  - Each rule is independently testable/toggleable -- you can run a
-    subset in unit tests, or disable one without touching the others.
-  - Validators see the *complete* SymbolTable (all datasets, all fields,
-    the tag index), so they can check things a single-statement handler
-    in symbol_table.py can't easily see -- e.g. "do any two datasets
-    collide once truncated to 32 characters?"
-
-How to add a new rule: write a function `(table: SymbolTable) -> None`
-that inspects `table` and calls `table.add_error(...)` / `add_warning(...)`
-for anything it finds, then add it to DEFAULT_VALIDATORS at the bottom
-(or pass your own list into run_validators explicitly).
-"""
+#================================================================================
+#File        : validators.py
+#Author      : Eric C. Grasby, MSIQ
+#Created     : 2026-07-31
+#Dissertation: A Domain-Specific Language Approach to Monitoring and Surveillance in Wholesale Electricity Markets
+#Institution : University of Arkansas at Little Rock
+#Advisor     : Dr. Daniel Berleant
+#--------------------------------------------------------------------------------
+#Purpose     :
+#    Performs semantic validation on the parsed input program. This relies on a class (SymbolTable) built from the
+#    main abstract syntax tree (AST). This creates all errors/warnings that are found in error.log and warning.log
+#    within each `run` directory of the transpiler
+#
+#Notes       :
+#    How to add a new rule to validators.py:
+#       1. Write a function `(table: SymbolTable) -> None` that accepts the SymbolTable as an argument and inspects
+#       the underlying data. It should call `table.add_error()` or `table.add_warning()` for anything illegal
+#       found within the inputs.
+#       2. Add function name to DEFAULT_VALIDATORS at bottom of script
+#       (or pass custom list to run_validators in `main.py` if running from a different context
+#
+#
+#Version     : 0.1.0
+#Last Updated: 2026-08-20
+#================================================================================
 
 from __future__ import annotations
 
@@ -39,7 +38,7 @@ Validator = Callable[[SymbolTable], None]
 # SAS identifier rules
 # ---------------------------------------------------------------------------
 #
-# These encode real SAS naming constraints:
+# SAS naming constraints:
 #   - Names (datasets, variables/fields) are limited to 32 characters.
 #   - Must start with a letter or underscore; remaining chars are
 #     letters/digits/underscores only -- no spaces, no punctuation.
@@ -47,17 +46,16 @@ Validator = Callable[[SymbolTable], None]
 #     dataset or variable names even though SAS won't always hard-reject
 #     them (e.g. they can shadow automatic variables).
 #
-# Adjust/extend freely -- these are meant as a starting point you can
-# tune to whatever your actual SAS environment enforces.
 
 SAS_MAX_NAME_LENGTH = 32
-SAS_VALID_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+SAS_INVALID_NAME_RE = re.compile("^(?!^[a-zA-Z_][a-zA-Z0-9_]{0,31}$).*$")
 SAS_RESERVED_WORDS = {
     "_all_", "_character_", "_infile_", "_n_", "_null_", "_numeric_",
     "data", "input", "output", "proc", "run", "set", "then", "else",
 }
 
-
+# TODO: This functions works great, but prints multiple errors for the same field (if multiple errors apply)
+#   Investigate collapsing multiple issues into a single log message that includes all problems with naming convention
 def _check_sas_name(table: SymbolTable, name: str, line, kind: str, rule: str) -> None:
     """Shared logic for validating a single identifier destined to become
     a SAS dataset name or variable name. `kind` is just for message text
@@ -75,7 +73,7 @@ def _check_sas_name(table: SymbolTable, name: str, line, kind: str, rule: str) -
             f"names cannot contain",
             line, rule=f"{rule}-spaces",
         )
-    elif not SAS_VALID_NAME_RE.match(name):
+    elif SAS_INVALID_NAME_RE.match(name):
         table.add_error(
             f"{kind.capitalize()} name '{name}' is not a valid SAS identifier "
             f"(must start with a letter or underscore, and contain only "
@@ -141,7 +139,7 @@ def check_dataset_name_collisions_when_truncated(table: SymbolTable) -> None:
 def check_source_field_name_collisions_when_truncated(table: SymbolTable, ds_name: str, field_names: List[str]) -> None:
     """
     Similar logic to `check_dataset_name_collisions_when_truncated` but applies the logic
-    to field names within a dataset, which should also not be duplicated
+    to field names within a dataset, which should also not be duplicated within the same library
     """
     seen = {}
     for field_name in field_names:
@@ -167,7 +165,7 @@ def check_source_path_extension(table: SymbolTable) -> None:
             table.add_warning(
                 f"Source path '{ds.source_path}' for dataset '{ds.name}' "
                 f"does not end in .csv",
-                ds.declared_at_line, rule="source-path-extension",
+                ds.declared_at_line, rule="source-type",
             )
 
 
@@ -191,9 +189,8 @@ def run_validators(table: SymbolTable, validators: List[Validator] = None) -> No
     themselves -- this function doesn't return anything; check
     table.errors / table.warnings afterward.
 
-    Pass a custom `validators` list (e.g. a subset, or with your own
-    rules appended) to override DEFAULT_VALIDATORS -- useful in tests, or
-    if you want different rule sets for different environments.
+    Pass a custom `validators` list (e.g. a subset, or different rules appended)
+    to override DEFAULT_VALIDATORS
     """
     for validator in (validators if validators is not None else DEFAULT_VALIDATORS):
         validator(table)
