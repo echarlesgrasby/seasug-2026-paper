@@ -8,7 +8,7 @@ This is the appendix for "A Domain-Specific Computer Language for Market Monitor
 
 ## Appendix B: Sample Mlang Program
 
-![Sample Mlang script](./appendix_assets/sample.mlang.png)
+![Sample Mlang script](./appendix_assets/basic_mlang_program.png)
 
 ## Appendix C: Herfindahl-Hirschman Index (HHI)
 
