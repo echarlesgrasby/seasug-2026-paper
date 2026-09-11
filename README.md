@@ -1,9 +1,10 @@
 # seasug-2026-paper
-Repository for [SEASUG 2026 Paper](https://sesug.org/SEASUG2026/index.php "Southeast Atlantic SAS Users Group") (co-authored with Dr. Daniel Berleant and Dr. Maria Gingras)
 
-**A Domain-Specific Computer Language for Market Monitoring: From Domain Logic to SAS Code**
+**Title**: A Domain-Specific Computer Language for Market Monitoring: From Domain Logic to SAS Code
 
 **Keywords**: domain-specific language, analyst abstraction, energy market, market monitoring, transpiler
+
+Repository for [SEASUG 2026 Paper](https://sesug.org/SEASUG2026/index.php "Southeast Atlantic SAS Users Group") (co-authored with Dr. Daniel Berleant and Dr. Maria Gingras)
 
 > [!NOTE]
 > There are some sections of this paper that are referenced from the first author's (Eric C. Grasby) dissertation.
