@@ -12,3 +12,21 @@ Working Title: **A Domain-Specific Computer Language for Market Monitoring: From
 ## License
 
 Please cite with proper credit to the authors.
+
+__IEEE Format__
+
+E. Grasby, D. Berleant, and M. Gingras, “A Domain-Specific Computer Language for Market Monitoring: From Domain Logic to SAS Code,” in SEASUG 2026 Proceedings, Oct. 2026. [Online]. Available: [https://github.com/echarlesgrasby/seasug-2026-paper/blob/master/SEASUG_42-2026_Grasby_Berleant_Gingras.pdf](https://github.com/echarlesgrasby/seasug-2026-paper/blob/master/SEASUG_42-2026_Grasby_Berleant_Gingras.pdf)
+
+__BibTex Format__
+
+```
+@inproceedings{grasby2026domain,
+  author    = {E. Grasby and D. Berleant and M. Gingras},
+  title     = {A Domain-Specific Computer Language for Market Monitoring: From Domain Logic to SAS Code},
+  booktitle = {SEASUG 2026 Proceedings},
+  month     = oct,
+  year      = {2026},
+  url       = {https://github.com/echarlesgrasby/seasug-2026-paper/blob/master/SEASUG_42-2026_Grasby_Berleant_Gingras.pdf},
+  note      = {Online}
+}
+```
