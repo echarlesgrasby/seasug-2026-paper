@@ -14,7 +14,7 @@ This is the appendix for "A Domain-Specific Computer Language for Market Monitor
 
 HHI is a classic measure of _market concentration_, and is commonly used to assess if a merger/acquisition (M&A) between large firms will result in a monopoly. It is often used in electricity markets for similar means. One of the aims of Monitor Language is to allow the user to create visualizations & metrics from source data. The below figures are included as examples of what could be created using the MLang prototype: 
 
-![SWPP HHI from nameplate capacity](./appendix_assets/hhi_nameplate_capacity_spp.png)
+![SWPP HHI from nameplate capacity](./appendix_assets/hhi_utility_spp.png)
 
 ![SWPP HHI at plant level](./appendix_assets/hhi_plant_level_spp.png)
 
