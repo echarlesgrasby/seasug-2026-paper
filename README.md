@@ -41,7 +41,7 @@ Daniel Berleant (PhD '91, UT Austin) is currently a faculty member at the Univer
 
 ### Dr. Maria Gingras
 
-Dr. Maria Gingras (PhD 2017, Ecology; Environment Science and Policy, UC Davis) is an experienced economist and electric market analyst. She has worked in several disciplines in the wholesale electric market space, including a position as an analyst in the Federal Energy Regulatory Commission (FERC) Office of Enforcement.
+Maria Gingras (PhD 2017, Ecology; Environment Science and Policy, UC Davis) is an experienced economist and electric market analyst. She has worked in several disciplines in the wholesale electric market space, including a position as an analyst in the Federal Energy Regulatory Commission (FERC) Office of Enforcement.
 
 ## "License"
 
