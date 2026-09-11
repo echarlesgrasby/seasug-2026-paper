@@ -4,11 +4,11 @@ This is the appendix for "A Domain-Specific Computer Language for Market Monitor
 
 ## Appendix A: Initial Mlang Lark Grammar
 
-![Initial lark grammar for Mlang](./appendix_assets/initial_lark_grammar.png)
+![Initial lark grammar for Mlang](./appendix_assets/lark_grammar_init.png)
 
 ## Appendix B: Sample Mlang Program
 
-![Sample Mlang script](./appendix_assets/basic_mlang_program.png)
+![Sample Mlang script](./appendix_assets/mlang_sample_program.png)
 
 ## Appendix C: Herfindahl-Hirschman Index (HHI)
 
