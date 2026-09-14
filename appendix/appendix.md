@@ -1,6 +1,6 @@
 # Appendix
 
-This is the appendix for "A Domain-Specific Computer Language for Market Monitoring: From Domain Logic to SAS Code"
+This is the appendix for "A Domain-Specific Computer Language for Market Monitoring: From Domain Logic to SAS Code". If you are looking for the transpiler source code for this publication, it is available [here](https://github.com/echarlesgrasby/seasug-2026-paper/tree/master/transpiler).
 
 ## Appendix A: Initial Mlang Lark Grammar
 
