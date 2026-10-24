@@ -6,9 +6,14 @@
 
 Repository for [SEASUG 2026 Paper](https://sesug.org/SEASUG2026/index.php "Southeast Atlantic SAS Users Group") (co-authored with Dr. Daniel Berleant and Dr. Maria Gingras)
 
+
+This paper has been included in the SEASUG conference proceedings on the SASLexicon.org repository at [this link](https://saslexicon.org/SESUG/2026/Grasby_A_DomainSpecific_Computer_Language_for_Market_Monitoring_From_Domain_Logic_to_SAS_Code.pdf)
+
+
 > [!NOTE]
 > There are some sections of this paper that are referenced from the first author's (Eric C. Grasby) dissertation.
 > This dissertation is still a draft (has not been published with ProQuest) at the time of writing this paper.
+
 
 ## Abstract
 
@@ -65,3 +70,8 @@ __BibTex Format__
   note      = {Online}
 }
 ```
+
+
+
+> [!NOTE]
+> This GitHub repository was archived after the SEASUG 2026 conference completed.
